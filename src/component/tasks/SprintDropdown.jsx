@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import CreateSprint from "./CreateSprint";
+import DefineSprintTasks from "./DefineSprintTasks";
 
 const SprintDropdown = ({ projectId }) => {
   const [sprints, setSprints] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null); // Create a ref for the dropdown
+  const dropdownRef = useRef(null); // ✅ Create ref for the dropdown container
 
   // Fetch Sprints from API
   useEffect(() => {
@@ -31,22 +33,22 @@ const SprintDropdown = ({ projectId }) => {
     if (projectId) fetchSprints(); // Fetch only if projectId exists
   }, [projectId]);
 
-  // Close dropdown when clicking outside
+  // ✅ Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false); // Close the dropdown
+        setIsOpen(false);
       }
     };
 
-    // Add event listener
-    document.addEventListener("mousedown", handleClickOutside);
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
 
     return () => {
-      // Cleanup event listener on unmount
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isOpen]);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -60,19 +62,26 @@ const SprintDropdown = ({ projectId }) => {
 
       {/* Dropdown List */}
       {isOpen && (
-        <div className="absolute mt-2 bg-white shadow-lg rounded-lg p-2 w-60">
+        <div className="absolute mt-2 bg-white shadow-lg rounded-lg p-2 w-80">
           {sprints.length > 0 ? (
             sprints.map((sprint) => (
               <div
                 key={sprint.id}
                 className="p-2 hover:bg-gray-100 rounded-md cursor-pointer"
               >
-                {sprint.name}
+                <div className="flex justify-between items-center gap-4">
+                  <span>{sprint.name}</span>
+                  <DefineSprintTasks
+                    projectId={projectId}
+                    sprintId={sprint.id}
+                  />
+                </div>
               </div>
             ))
           ) : (
             <p className="text-gray-500 text-center">No sprints available</p>
           )}
+          <CreateSprint projectId={projectId} />
         </div>
       )}
     </div>
