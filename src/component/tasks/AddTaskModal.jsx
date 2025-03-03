@@ -1,6 +1,6 @@
 import { useState } from "react";
 import DueDatePicker from "./DueDatePicker";
-import AssignTask from "./AssignTask";
+import AssignTask from "../../utils/AssignTask";
 import PrioritySelector from "./PrioritySelector";
 
 
