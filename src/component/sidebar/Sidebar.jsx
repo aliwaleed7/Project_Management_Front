@@ -37,7 +37,7 @@ const Sidebar = ({ setWS_id }) => {
   };
 
   return (
-    <div className="w-64 h-screen bg-gray-100 p-4 overflow-y-auto ">
+    <div className="fixed top-0 left-0 w-64 h-screen bg-gray-100 p-4 overflow-y-auto shadow-md">
       {/* Workspace dropdown to switch between workspaces */}
       <WorkspacesDropdown
         userId={userId}
@@ -58,6 +58,8 @@ const Sidebar = ({ setWS_id }) => {
           </div>
         </li>
       </ul>
+
+      {/* Create Space Button */}
       <div>
         <button
           onClick={() => setModalOpen(true)}
@@ -73,6 +75,7 @@ const Sidebar = ({ setWS_id }) => {
       </div>
     </div>
   );
+
 };
 
 export default Sidebar;

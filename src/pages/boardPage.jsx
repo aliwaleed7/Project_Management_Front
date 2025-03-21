@@ -1,9 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Sidebar from "../component/sidebar/Sidebar"; // Import Sidebar
-import TaskComponent from "../component/tasks/taskComponent"; // Import TaskComponent
+import TaskComponent from "../component/board/TaskList"; // Import TaskComponent
 
-const MainPage = () => {
+const boardPage = () => {
   const [workspaceId, setWorkspaceId] = useState(null);
 
   // Function to update the workspace ID
@@ -24,4 +24,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default boardPage;

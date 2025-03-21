@@ -24,7 +24,7 @@ const PrioritySelector = ({ onPriorityChange }) => {
 
       {/* Dropdown List */}
       {isOpen && (
-        <ul className="absolute left-0 mt-2 w-32 bg-white border rounded-lg shadow-lg">
+        <ul className="absolute left-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-50">
           {priorities.map((priority) => (
             <li
               key={priority}
