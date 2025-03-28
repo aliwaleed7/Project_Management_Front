@@ -4,11 +4,17 @@ import React, { useState, useEffect } from "react";
 import { decodeToken } from "../../utils/decodeToken.js";
 import SpacesList from "./SpacesList";
 import CreateSpace from "./CreateSpace.jsx";
+import { useDispatch } from "react-redux";
+import { setWorkspaceId } from "../../redux/slices/workspaceSlice.js";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ setWS_id }) => {
   const [userId, setUserId] = useState(null);
   const [sWorkspace, setSWorkspace] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch(); // Add this line before using dispatch
 
   useEffect(() => {
     // Fetch the token from local storage
@@ -34,6 +40,7 @@ const Sidebar = ({ setWS_id }) => {
     // Additional logic on workspace change can go here (e.g., update context or state
     setSWorkspace(workspace.id);
     if (setWS_id) setWS_id(workspace.id);
+    dispatch(setWorkspaceId(workspace.id));
   };
 
   return (
@@ -49,7 +56,10 @@ const Sidebar = ({ setWS_id }) => {
         <li className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer">
           Inbox
         </li>
-        <li className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer">
+        <li
+          className="py-2 px-4 hover:bg-gray-200 rounded cursor-pointer"
+          onClick={() => navigate("/dash")}
+        >
           Dashboard
         </li>
         <li>
@@ -75,7 +85,6 @@ const Sidebar = ({ setWS_id }) => {
       </div>
     </div>
   );
-
 };
 
 export default Sidebar;

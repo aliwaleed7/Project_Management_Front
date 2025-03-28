@@ -4,6 +4,7 @@ import EntityMenu from "./EntityMenu";
 import CreateProject from "./createProject";
 import { useDispatch } from "react-redux";
 import { setSelectedProject } from "../../redux/slices/projectSlice.js"; // Import action
+import { useLocation, useNavigate } from "react-router-dom";
 
 // Sub-component to handle folder content (lists inside a folder)
 const FolderContent = ({ folderId, expanded }) => {
@@ -11,6 +12,8 @@ const FolderContent = ({ folderId, expanded }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (expanded) {
@@ -42,6 +45,14 @@ const FolderContent = ({ folderId, expanded }) => {
   }, [expanded, folderId]);
 
   if (!expanded) return null;
+  const handleListClick = (listId) => {
+    dispatch(setSelectedProject(listId));
+
+    // Navigate only if the current path is /dashContent or /dash
+    if (location.pathname === "/dashContent" || location.pathname === "/dash") {
+      navigate("/main");
+    }
+  };
 
   return (
     <div className="ml-6 mt-1 text-base">
@@ -55,7 +66,7 @@ const FolderContent = ({ folderId, expanded }) => {
             <li
               key={list.id}
               className="mb-1 flex items-center hover:bg-gray-200"
-              onClick={() => dispatch(setSelectedProject(list.id))}
+              onClick={() => handleListClick(list.id)}
             >
               <span className="mr-3 inline-block bg-black text-white px-1 py-0.5 rounded"></span>
               {list.name}
@@ -78,6 +89,8 @@ const SpaceContent = ({ spaceId }) => {
   const [expandedFolders, setExpandedFolders] = useState([]);
   const [folderId, setFolderId] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!spaceId) return;
@@ -124,6 +137,15 @@ const SpaceContent = ({ spaceId }) => {
     delete: "create",
   };
 
+  const handleListClick = (listId) => {
+    dispatch(setSelectedProject(listId));
+
+    // Navigate only if the current path is /dashContent or /dash
+    if (location.pathname === "/dashContent" || location.pathname === "/dash") {
+      navigate("/main");
+    }
+  };
+
   return (
     <div className="p-2">
       {folders.length > 0 && (
@@ -165,7 +187,7 @@ const SpaceContent = ({ spaceId }) => {
             <li
               key={list.id}
               className="py-1 flex items-center justify-between hover:bg-gray-200"
-              onClick={() => dispatch(setSelectedProject(list.id))}
+              onClick={() => handleListClick(list.id)}
             >
               <span>{list.name}</span>
               <EntityMenu

@@ -1,12 +1,22 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Button, Modal, Select, message } from "antd";
+import { useSelector } from "react-redux";
+import { setListId } from "../../redux/slices/dashboardSlice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const DashboardCreator = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [spaces, setSpaces] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const workspaceId = useSelector((state) => state.workspace.workspaceId);
+
+  console.log("Current Workspace ID:", workspaceId);
 
   // Get token from localStorage
   const token = localStorage.getItem("token");
@@ -16,7 +26,7 @@ const DashboardCreator = () => {
     const fetchSpaces = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/space/spaces-with-projects",
+          `http://localhost:5000/api/space/spaces-with-projects?workspace_id=${workspaceId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -43,12 +53,25 @@ const DashboardCreator = () => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/dash/create",
-        { dash_name: "New Dashboard", list_id: selectedProject },
+        {
+          dash_name: "New Dashboard",
+          list_id: selectedProject,
+          ws_id: 2,
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       message.success("Dashboard created successfully!");
-      console.log(response.data);
+
+      // Extract listId (project ID) from response
+      const listId = response.data.dashboard.list_id;
+
+      // Store in Redux
+      dispatch(setListId(listId));
+
+      // Redirect to dashboard
+      navigate("/dashContent");
+
       setIsModalOpen(false);
       setSelectedProject(null);
     } catch (error) {

@@ -9,6 +9,7 @@ const TaskComponent = ({ workspaceId }) => {
     (state) => state.project.selectedProjectId
   );
 
+
   return (
     <div>
       <TaskHeader workspaceId={workspaceId} projectId={selectedProjectId} />
